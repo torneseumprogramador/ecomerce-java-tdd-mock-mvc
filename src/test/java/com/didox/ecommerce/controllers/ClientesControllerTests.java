@@ -5,50 +5,64 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.didox.ecommerce.daos.IClientesDao;
+import com.didox.ecommerce.libs.HttpTestClient;
+import com.didox.ecommerce.models.Cliente;
 
 @SpringBootTest
 class ClientesControllerTests {
 
+	@Autowired
+	private IClientesDao repo;
+
+	@BeforeEach
+	private void preparaDatabase(){
+		repo.deleteAll();
+	}
+
 	@Test
 	void rotaClientesGET() throws URISyntaxException, IOException, InterruptedException {
-
-        HttpGet get = new HttpGet("http://localhost:8080/clientes");
-
-		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-        CloseableHttpClient client = clientBuilder.build();
-        get.addHeader("Content-Type", "application/json");
-
-        var response = client.execute(get);
-        
-		// String responseAsString = EntityUtils.toString(response.getEntity());
-        // System.out.println(responseAsString);
-
-		assertEquals(200, response.getStatusLine().getStatusCode());
+        var code = HttpTestClient.get("/clientes");
+		assertEquals(200, code);
 	}
 
 	@Test
 	void rotaClientesPOST() throws URISyntaxException, IOException, InterruptedException {
+		var cliente = new Cliente();
+		cliente.setNome("Danilo");
+		cliente.setEmail("danilo@teste.com");
 
-        HttpPost post = new HttpPost("http://localhost:8080/clientes");
-
-		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-        CloseableHttpClient client = clientBuilder.build();
-        post.addHeader("Content-Type", "application/json");
-
-		String jsonFile = "{nome:\"Danilo\", email:\"danilo@teste.com\"}";
-		HttpEntity entity = new StringEntity(jsonFile);
-		post.setEntity(entity);
-
-        var response = client.execute(post);
-        
-		assertEquals(201, response.getStatusLine().getStatusCode());
+        var code = HttpTestClient.post("/clientes", cliente);
+		assertEquals(201, code);
 	}
+
+	@Test
+	void rotaClientesPUT() throws URISyntaxException, IOException, InterruptedException {
+		var cliente = new Cliente();
+		cliente.setNome("Danilo");
+		cliente.setEmail("danilo@teste.com");
+		repo.save(cliente);
+
+		cliente.setNome("Danilo Santos");
+
+        var code = HttpTestClient.put("/clientes/" + cliente.getId(), cliente);
+		assertEquals(200, code);
+	}
+
+	@Test
+	void rotaClientesDELETE() throws URISyntaxException, IOException, InterruptedException {
+		var cliente = new Cliente();
+		cliente.setNome("Danilo");
+		cliente.setEmail("danilo@teste.com");
+		repo.save(cliente);
+
+        var code = HttpTestClient.delete("/clientes/" + cliente.getId());
+		assertEquals(204, code);
+	}
+
 }
