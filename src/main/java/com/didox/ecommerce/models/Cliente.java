@@ -55,7 +55,7 @@ public class Cliente {
         this.endereco = endereco;
     }
     public String getNumero() {
-        return numero.toUpperCase();
+        return numero != null ? numero.toUpperCase() : null;
     }
     public void setNumero(String numero) {
         this.numero = numero;
