@@ -1,4 +1,3 @@
-mvn clean
-mvn package -Dmaven.test.skip
+./build.sh
 java -jar target/*.jar
 # mvn spring-boot:start

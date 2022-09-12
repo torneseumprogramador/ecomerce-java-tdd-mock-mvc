@@ -1,5 +1,4 @@
-mvn clean
-mvn package
+./test.sh
 
 echo "Digite a tag para publicação"
 read TAG
