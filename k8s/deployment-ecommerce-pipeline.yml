@@ -1,0 +1,167 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-configmap
+data:
+  MYSQL_HOST: clusterip-mysql
+  MYSQL_USER: root
+  DATABASE_ECOMERCE: ecommerce
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-mysql-secret
+data:
+  MYSQL_ROOT_PASSWORD: "MTIzNDU2" # dados transformandos em Base64 # https://www.base64encode.org/
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual-nginx
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data-nginx"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  storageClassName: manual-nginx
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysqlstatefulset
+spec:
+  selector:
+    matchLabels:
+      app: didox-mysql
+  serviceName: mysqlstatefulset
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: didox-mysql
+    spec:
+      containers:
+        - name: container-pod-mysql
+          image: mysql
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
+
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: DATABASE_ECOMERCE
+
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              name: mypd
+          resources:
+            requests:
+              memory: "300Mi" # 512 MB
+              cpu: "0.2" # 1 milicors VCPU # este recurso tira do meu cluster este recurso #https://www.datacenters.com/news/what-is-a-vcpu-and-how-do-you-calculate-vcpu-to-cpu https://www.hyve.com/what-is-a-vmware-vcpu/
+            limits: # caso a aplicação precise de mais recurso, ele coloca este limite automático
+              memory: "600Mi" # 800 MB
+              cpu: "0.4"
+      volumes:
+        - name: mypd
+          persistentVolumeClaim:
+            claimName: myclaim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clusterip-mysql
+spec:
+  type: ClusterIP
+  selector:
+    app: didox-mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-deployment
+spec:
+  template:
+    metadata:
+      name: didox-ecommerce
+      labels:
+        app: didox-ecommerce
+    spec:
+      containers:
+        - name: container-didox-ecommerce
+          image: IMG_PARA_SUBSTITUIR
+          ports:
+            - containerPort: 8090
+          env:
+            - name: MYSQL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
+
+            - name: DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: DATABASE_ECOMERCE
+
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: MYSQL_HOST
+
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: MYSQL_USER
+
+          resources:
+            requests:
+              memory: "300Mi" # 512 MB
+              cpu: "0.5" # 1 milicors VCPU # este recurso tira do meu cluster este recurso #https://www.datacenters.com/news/what-is-a-vcpu-and-how-do-you-calculate-vcpu-to-cpu https://www.hyve.com/what-is-a-vmware-vcpu/
+            limits: # caso a aplicação precise de mais recurso, ele coloca este limite automático
+              memory: "600Mi" # 800 MB
+              cpu: "0.8"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: didox-ecommerce
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadbalancer-ecommerce
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8090
+  selector:
+    app: didox-ecommerce
