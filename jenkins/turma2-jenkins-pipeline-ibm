@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'TAG', defaultValue: '', description: 'Digite uma tag no padrao V0.0.0')
+        string(name: 'TAG', defaultValue: '', description: 'Digite uma tag no formato v0.0.0')
     }
 
     stages {
@@ -23,9 +23,9 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh "echo \"create database IF NOT EXISTS ecommerce_test;\" > criar-db.sql"
-                sh "mysql -uroot -p'root' -h 172.31.10.202 < criar-db.sql"
-                sh "MYSQL_USER=\"root\" MYSQL_PASS=\"root\" MYSQL_HOST=\"172.31.10.202\" DATABASE=\"ecommerce_test\" ./test.sh"
+                sh "echo \"create database IF NOT EXISTS ecommerce_teste;\" > criar-db.sql"
+                sh "mysql -uroot -p'root' -h 172.31.56.34 < criar-db.sql"
+                sh "MYSQL_USER=\"root\" MYSQL_PASS=\"root\" MYSQL_HOST=\"172.31.56.34\" DATABASE=\"ecommerce_teste\" ./test.sh "
             }
         }
         stage('Prepara-Dockerfile') {
@@ -37,19 +37,19 @@ pipeline {
         }
         stage('Build-docker') {
             steps {
-                sh "docker build -t didox/turma1_ibm_java_ecommerce_k8s:$TAG ."
+                sh "docker build -t didox/k8s_ecommerce:$TAG ."
             }
         }
-        stage('Push-Docker') {
+        stage('Push-docker') {
             steps {
-                sh "docker push didox/turma1_ibm_java_ecommerce_k8s:$TAG"
+                sh "docker push didox/k8s_ecommerce:$TAG"
             }
         }
-        stage('Deploy') {
+        stage('Clone-k8s-scripts') {
             steps {
-                sh "rm -rf k8s-turma1-ibm"
-                sh "git clone https://github.com/torneseumprogramador/k8s-turma1-ibm"
-                sh "cd k8s-turma1-ibm && ./deploy.sh"
+                sh "rm  -rf k8s-turma2-ibm"
+                sh "git clone https://github.com/torneseumprogramador/k8s-turma2-ibm.git"
+                sh "cd k8s-turma2-ibm && ./deploy.sh"
             }
         }
     }

@@ -12,7 +12,7 @@ kind: Secret
 metadata:
   name: db-mysql-secret
 data:
-  MYSQL_ROOT_PASSWORD: "MTIzNDU2" # dados transformandos em Base64 # https://www.base64encode.org/
+  MYSQL_ROOT_PASSWORD: MTIzNDU2 # dados transformandos em Base64 # https://www.base64encode.org/
 ---
 apiVersion: v1
 kind: PersistentVolume
