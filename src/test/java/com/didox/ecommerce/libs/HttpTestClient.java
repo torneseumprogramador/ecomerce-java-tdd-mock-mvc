@@ -15,7 +15,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import com.google.gson.Gson;
 
 public class HttpTestClient {
-    private static final String host = "http://localhost:8080/";
+    private static final String host = "http://localhost:8090/";
 
     public static int get(String path) throws ClientProtocolException, IOException{
         HttpGet get = new HttpGet(host + path);
