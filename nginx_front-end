@@ -1,0 +1,14 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	root /root/ecomerce-java-tdd-ibm-turma2;
+
+	index.html;
+
+	server_name _;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}
