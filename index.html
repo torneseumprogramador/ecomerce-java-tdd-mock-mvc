@@ -51,7 +51,7 @@
     </table>
     <script>
         const cadastrar = async () => {
-            const rawResponse = await fetch('http://api.daniloaparecido.com.br/clientes', {
+            const rawResponse = await fetch('http://api.daniloaparecido.com.br:8090/clientes', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -71,7 +71,7 @@
 
 
         const carregar = async () => {
-            const rawResponse = await fetch('http://api.daniloaparecido.com.br/clientes', {
+            const rawResponse = await fetch('http://api.daniloaparecido.com.br:8090/clientes', {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
