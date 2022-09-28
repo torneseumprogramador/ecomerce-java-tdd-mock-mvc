@@ -4,7 +4,9 @@ server {
 
 	root /root/ecomerce-java-tdd-ibm-turma2;
 
-	index.html;
+	root /usr/share/nginx/html;
+
+	index index.html index.htm index.nginx-debian.html;
 
 	server_name _;
 
