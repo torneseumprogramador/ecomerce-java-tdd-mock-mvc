@@ -25,6 +25,7 @@ class ClientesControllerTests {
 		repo.deleteAll();
 	}
 
+	/*
 	@Test
 	void rotaClientesGET() throws URISyntaxException, IOException, InterruptedException {
         var code = HttpTestClient.get("/clientes");
@@ -64,5 +65,5 @@ class ClientesControllerTests {
         var code = HttpTestClient.delete("/clientes/" + cliente.getId());
 		assertEquals(204, code);
 	}
-
+	*/
 }
