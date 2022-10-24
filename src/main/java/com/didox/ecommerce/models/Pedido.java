@@ -2,12 +2,10 @@ package com.didox.ecommerce.models;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -42,7 +40,6 @@ public class Pedido {
     }
 
     @ManyToOne(optional = true)
-    // @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id", nullable = true)
     private Cliente cliente;
 
     public Cliente getCliente() {
