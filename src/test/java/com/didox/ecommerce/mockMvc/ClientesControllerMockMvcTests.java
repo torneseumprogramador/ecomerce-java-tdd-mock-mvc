@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -91,5 +92,11 @@ class ClientesControllerMockMvcTests {
 		var cliente = new Cliente();
 		cliente.setEmail("teste@test.com");
 		return cliente;
+	}
+
+	// factoryBuilder token url para JWT
+	private MockHttpServletRequestBuilder factoryBuilder(String url, String token) {
+		return MockMvcRequestBuilders.post(url)
+				.header("Authorization", token.trim());
 	}
 }
