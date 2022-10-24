@@ -1,5 +1,5 @@
-package com.didox.ecommerce.controllers;
-
+package com.didox.ecommerce.controllersRest;
+/*
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
@@ -8,15 +8,17 @@ import java.net.URISyntaxException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.didox.ecommerce.daos.IClientesDao;
 import com.didox.ecommerce.libs.HttpTestClient;
 import com.didox.ecommerce.models.Cliente;
+*/
+
+import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ClientesControllerTests {
-
+	/*
 	@Autowired
 	private IClientesDao repo;
 
@@ -25,7 +27,6 @@ class ClientesControllerTests {
 		repo.deleteAll();
 	}
 
-	/*
 	@Test
 	void rotaClientesGET() throws URISyntaxException, IOException, InterruptedException {
         var code = HttpTestClient.get("/clientes");
