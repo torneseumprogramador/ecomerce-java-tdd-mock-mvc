@@ -26,7 +26,7 @@ class RelacionamentoTests {
     }
 
 	@Test
-	void salvarPedido() {
+	void pedidoRelacionamento() {
 		var cliente = new Cliente();
 		cliente.setEmail("teste@teste.com");
 		clientesDao.save(cliente);
@@ -35,8 +35,10 @@ class RelacionamentoTests {
 		pedido.setCliente(cliente);
 		pedidosDao.save(pedido);
 
-
 		assertEquals(true, pedido.getId() > 0);
 		assertEquals(true, pedido.getCliente().getId() > 0);
+
+		// var clienteDb = clientesDao.findById(cliente.getId()).get();
+		// assertEquals(1, clienteDb.getPedidos().size());
 	}
 }
