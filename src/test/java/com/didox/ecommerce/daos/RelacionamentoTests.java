@@ -2,8 +2,6 @@ package com.didox.ecommerce.daos;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.persistence.EntityManager;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +19,6 @@ class RelacionamentoTests {
 	@Autowired
 	private IClientesDao clientesDao;
 
-	@Autowired
-	private EntityManager entityManager;
-
 	@BeforeEach
     public void limpaBase() {
         pedidosDao.deleteAll();
@@ -34,19 +29,12 @@ class RelacionamentoTests {
 	void pedidoRelacionamento() {
 		var cliente = new Cliente();
 		cliente.setEmail("teste@teste.com");
-		clientesDao.save(cliente);
-
-
-		Cliente clienteReference = entityManager.getReference(Cliente.class, cliente.getId());
 
 		var pedido = new Pedido();
-		pedido.setCliente(clienteReference);
+		pedido.setCliente(cliente);
 		pedidosDao.save(pedido);
 
 		assertEquals(true, pedido.getId() > 0);
 		assertEquals(true, pedido.getCliente().getId() > 0);
-
-		// var clienteDb = clientesDao.findById(cliente.getId()).get();
-		// assertEquals(1, clienteDb.getPedidos().size());
 	}
 }

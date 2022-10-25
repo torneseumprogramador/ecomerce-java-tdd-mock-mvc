@@ -75,7 +75,7 @@ class ClientesControllerMockMvcTests {
 		clientesDao.save(cliente);
 
 		cliente.setNome("teste");
-		String json = new ObjectMapper().writeValueAsString(cliente);
+		String json = new Gson().toJson(cliente);
 		
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/clientes/" + cliente.getId())
 				.content(json)

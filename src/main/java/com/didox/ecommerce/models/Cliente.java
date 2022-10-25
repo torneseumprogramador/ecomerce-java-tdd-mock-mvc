@@ -1,5 +1,6 @@
 package com.didox.ecommerce.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "clientes")
-public class Cliente {
+public class Cliente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -97,6 +98,7 @@ public class Cliente {
         this.complemento = complemento;
     }
 
+    /*
     @OneToMany(mappedBy="cliente")
     private List<Pedido> pedidos = new ArrayList<>();
 
@@ -104,4 +106,5 @@ public class Cliente {
     public List<Pedido> getPedidos() {
         return pedidos;
     }
+    */
 }
