@@ -1,6 +1,7 @@
 package com.didox.ecommerce.models;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "clientes")
@@ -94,10 +97,11 @@ public class Cliente {
         this.complemento = complemento;
     }
 
-    // @OneToMany(mappedBy="cliente")
-    // private Set<Pedido> pedidos;
+    @OneToMany(mappedBy="cliente")
+    private List<Pedido> pedidos = new ArrayList<>();
 
-    // public Set<Pedido> getPedidos() {
-    //     return this.pedidos;
-    // }
+    @JsonIgnore
+    public List<Pedido> getPedidos() {
+        return pedidos;
+    }
 }

@@ -2,6 +2,7 @@ package com.didox.ecommerce.models;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,7 +41,7 @@ public class Pedido {
         this.data = data;
     }
 
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = true, cascade=CascadeType.ALL) // Cria cliente ao setar em pedido
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
